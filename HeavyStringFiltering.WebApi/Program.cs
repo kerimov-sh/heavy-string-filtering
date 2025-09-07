@@ -1,4 +1,6 @@
+using HeavyStringFiltering.Business.Extensions;
 using HeavyStringFiltering.DataAccess.Extensions;
+using HeavyStringFiltering.WebApi.BackgroundServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +12,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDataAccessDependencies();
+builder.Services.AddBusinessDependencies(builder.Configuration);
+
+builder.Services.AddHostedService<FilteringBackgroundService>();
 
 var app = builder.Build();
 

@@ -1,6 +1,6 @@
 ﻿namespace HeavyStringFiltering.WebApi.Models;
 
-public class ApiResponse
+public class ApiResponseModel
 {
     public string Status { get; set; }
 }

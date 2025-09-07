@@ -1,4 +1,6 @@
-﻿using HeavyStringFiltering.WebApi.Models;
+﻿using HeavyStringFiltering.Business.DataTransferObjects;
+using HeavyStringFiltering.Business.Services;
+using HeavyStringFiltering.WebApi.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HeavyStringFiltering.WebApi.Controllers;
@@ -7,19 +9,28 @@ namespace HeavyStringFiltering.WebApi.Controllers;
 [Route("api/upload")]
 public class UploadController : ControllerBase
 {
-    public UploadController()
+    private readonly IStringChunkService _stringChunkService;
+
+    public UploadController(IStringChunkService stringChunkService)
     {
-        
+        _stringChunkService = stringChunkService;
     }
 
     [HttpPost]
-    public async Task<ActionResult<ApiResponse>> UploadAsync(StringChunk chunk)
+    public async Task<ActionResult<ApiResponseModel>> UploadAsync(StringChunkDto stringChunk)
     {
-        var result = new ApiResponse
-        {
-            Status = "Accepted"
-        };
+        var isAdded = await _stringChunkService.AddChunkAsync(stringChunk);
+        var response = new ApiResponseModel();
 
-        return Ok(result);
+        if (isAdded)
+        {
+            response.Status = "Accepted";
+
+            return Ok(response);
+        }
+
+        response.Status = "Rejected";
+
+        return BadRequest(response);
     }
 }
